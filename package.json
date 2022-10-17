@@ -6,6 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "lint-staged": {
+    "*.js": [
+      "standard"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Faelst/clean-code-api.git"
@@ -16,5 +21,9 @@
   "bugs": {
     "url": "https://github.com/Faelst/clean-code-api/issues"
   },
-  "homepage": "https://github.com/Faelst/clean-code-api#readme"
+  "homepage": "https://github.com/Faelst/clean-code-api#readme",
+  "devDependencies": {
+    "lint-staged": "^13.0.3",
+    "standard": "^17.0.0"
+  }
 }
