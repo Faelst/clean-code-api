@@ -4,11 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install"
   },
   "lint-staged": {
     "*.js": [
-      "standard"
+      "standard --fix",
+      "git add"
     ]
   },
   "repository": {
@@ -23,6 +25,7 @@
   },
   "homepage": "https://github.com/Faelst/clean-code-api#readme",
   "devDependencies": {
+    "husky": "^8.0.0",
     "lint-staged": "^13.0.3",
     "standard": "^17.0.0"
   }
