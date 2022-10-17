@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "prepare": "husky install",
     "lint-staged": "lint-staged"
   },
@@ -28,6 +28,7 @@
   "homepage": "https://github.com/Faelst/clean-code-api#readme",
   "devDependencies": {
     "husky": "^8.0.0",
+    "jest": "^29.2.0",
     "lint-staged": "^13.0.3",
     "standard": "^17.0.0"
   }
