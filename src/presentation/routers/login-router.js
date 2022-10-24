@@ -20,9 +20,13 @@ class LoginRouter {
       return HttpResponse.badRequest('password')
     }
 
-    this.authUseCase.auth(email, password)
+    const credentials = this.authUseCase.auth(email, password)
 
-    return HttpResponse.unauthorizedError()
+    if (!credentials) {
+      return HttpResponse.unauthorizedError()
+    }
+
+    return HttpResponse.ok()
   }
 }
 

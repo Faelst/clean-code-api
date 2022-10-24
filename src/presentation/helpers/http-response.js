@@ -2,6 +2,12 @@ const MissingParamsError = require('./missing-params-error')
 const UnauthorizedError = require('./unathorized-error')
 
 class HttpResponse {
+  static ok () {
+    return {
+      statusCode: 200
+    }
+  }
+
   static badRequest (paramName) {
     return {
       statusCode: 400,

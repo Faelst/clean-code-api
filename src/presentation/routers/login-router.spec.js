@@ -7,10 +7,15 @@ const makeSut = () => {
     auth (email, password) {
       this.email = email
       this.password = password
+
+      return this.accessToken
     }
   }
 
   const authUseCase = new AuthUseCase()
+
+  authUseCase.accessToken = 'valid_token'
+
   const sut = new LoginRouter(authUseCase)
 
   return {
@@ -20,6 +25,20 @@ const makeSut = () => {
 }
 
 describe('Login Router', () => {
+  test('Should return 200 if valid email and password', () => {
+    const { sut } = makeSut()
+
+    const httpRequest = {
+      body: {
+        email: 'valid_email@mail.com',
+        password: 'valid_password'
+      }
+    }
+
+    const httpResponse = sut.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(200)
+  })
+
   test('Should return 400 if no email is provided', () => {
     const { sut } = makeSut()
 
@@ -77,7 +96,9 @@ describe('Login Router', () => {
   })
 
   test('Should return 401 when invalid credentials are provided', () => {
-    const { sut } = makeSut()
+    const { sut, authUseCase } = makeSut()
+
+    authUseCase.accessToken = null
 
     const httpRequest = {
       body: {
