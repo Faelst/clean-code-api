@@ -26,7 +26,7 @@ const makeSut = () => {
 
 describe('Login Router', () => {
   test('Should return 200 if valid email and password', () => {
-    const { sut } = makeSut()
+    const { sut, authUseCase } = makeSut()
 
     const httpRequest = {
       body: {
@@ -37,6 +37,7 @@ describe('Login Router', () => {
 
     const httpResponse = sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(200)
+    expect(httpResponse.body.accessToken).toEqual(authUseCase.accessToken)
   })
 
   test('Should return 400 if no email is provided', () => {
