@@ -1,5 +1,6 @@
 const MissingParamsError = require('../helpers/missing-params-error')
 const UnauthorizedError = require('../helpers/unathorized-error')
+const InvalidParamError = require('../helpers/invalid-param-error')
 const LoginRouter = require('./login-router')
 
 const makeSut = () => {
@@ -13,15 +14,31 @@ const makeSut = () => {
   }
 
   const authUseCase = new AuthUseCase()
+  const emailValidatorSpy = makeEmailValidator()
 
   authUseCase.accessToken = 'valid_token'
 
-  const sut = new LoginRouter(authUseCase)
+  const sut = new LoginRouter(authUseCase, emailValidatorSpy)
 
   return {
     sut,
-    authUseCase
+    authUseCase,
+    emailValidatorSpy
   }
+}
+
+const makeEmailValidator = () => {
+  class EmailValidatorSpy {
+    isValid (email) {
+      return this.isEmailValid
+    }
+  }
+
+  const emailValidator = new EmailValidatorSpy()
+
+  emailValidator.isEmailValid = true
+
+  return emailValidator
 }
 
 describe('Login Router', () => {
@@ -54,20 +71,22 @@ describe('Login Router', () => {
     expect(httpResponse.body).toEqual(new MissingParamsError('email'))
   })
 
-  // test('Should return 400 if email is invalid', async () => {
-  //   const { sut } = makeSut()
+  test('Should return 400 if email is invalid', async () => {
+    const { sut, emailValidatorSpy } = makeSut()
 
-  //   const httpRequest = {
-  //     body: {
-  //       email: 'invalid_email',
-  //       password: "valid_email"
-  //     }
-  //   }
+    emailValidatorSpy.isEmailValid = false
 
-  //   const httpResponse = await sut.route(httpRequest)
-  //   expect(httpResponse.statusCode).toBe(400)
-  //   expect(httpResponse.body).toEqual(new InvalidParamError('email'))
-  // })
+    const httpRequest = {
+      body: {
+        email: 'invalid_email',
+        password: 'valid_email'
+      }
+    }
+
+    const httpResponse = await sut.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new InvalidParamError('email'))
+  })
 
   test('Should return 400 if no password is provided', async () => {
     const { sut } = makeSut()

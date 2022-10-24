@@ -1,9 +1,11 @@
 const HttpResponse = require('../helpers/http-response')
 const MissingParamsError = require('../helpers/missing-params-error')
+const InvalidParamError = require('../helpers/invalid-param-error')
 
 class LoginRouter {
-  constructor (authUseCase) {
+  constructor (authUseCase, emailValidator) {
     this.authUseCase = authUseCase
+    this.emailValidator = emailValidator
   }
 
   async route (httpRequest) {
@@ -14,9 +16,9 @@ class LoginRouter {
         return HttpResponse.badRequest(new MissingParamsError('email'))
       }
 
-      // if (!/email/.test(email)) {
-      //   return HttpResponse.badRequest('email')
-      // }
+      if (!this.emailValidator.isValid(email)) {
+        return HttpResponse.badRequest(new InvalidParamError('email'))
+      }
 
       if (!password) {
         return HttpResponse.badRequest(new MissingParamsError('password'))
