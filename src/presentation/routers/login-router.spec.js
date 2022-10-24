@@ -140,4 +140,26 @@ describe('Login Router', () => {
     const httpResponse = sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
   })
+
+  test('Should return 500 if AuthUseCase throws', () => {
+    class AuthUseCase {
+      auth () {
+        throw new Error()
+      }
+    }
+    const authUseCase = new AuthUseCase()
+    authUseCase.accessToken = 'valid_token'
+
+    const sut = new LoginRouter(authUseCase)
+
+    const httpRequest = {
+      body: {
+        email: 'any_email@mail.com',
+        password: 'any-password'
+      }
+    }
+
+    const httpResponse = sut.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+  })
 })
