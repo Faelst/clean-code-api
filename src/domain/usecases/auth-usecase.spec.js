@@ -87,22 +87,40 @@ const makeTokenGeneratorSpyWithError = () => {
   return new TokenGeneratorSpy()
 }
 
+const makeUpdateAccessTokenRepositorySpy = () => {
+  class UpdateAccessTokenRepositorySpy {
+    async update (userId, token) {
+      this.userId = userId
+      this.token = token
+    }
+  }
+
+  const updateAccessTokenRepositorySpy = new UpdateAccessTokenRepositorySpy()
+
+  return {
+    updateAccessTokenRepositorySpy
+  }
+}
+
 const makeSut = () => {
   const { encrypterSpy } = makeEncrypter()
   const { loadUserByEmailSpy } = makeLoadUserByEmailSpy()
   const { tokenGeneratorSpy } = makeTokenGeneratorSpy()
+  const { updateAccessTokenRepositorySpy } = makeUpdateAccessTokenRepositorySpy()
 
   const sut = new AuthUseCase({
     loadUserByEmailRepository: loadUserByEmailSpy,
     encrypter: encrypterSpy,
-    tokenGenerator: tokenGeneratorSpy
+    tokenGenerator: tokenGeneratorSpy,
+    updateAccessTokenRepository: updateAccessTokenRepositorySpy
   })
 
   return {
     sut,
     loadUserByEmailSpy,
     encrypterSpy,
-    tokenGeneratorSpy
+    tokenGeneratorSpy,
+    updateAccessTokenRepositorySpy
   }
 }
 
@@ -162,6 +180,13 @@ describe('Auth Usecase', () => {
     expect(accessToken).toBeTruthy()
   })
 
+  test('Should call UpdateAccessTokenRepository with correct values', async () => {
+    const { sut, updateAccessTokenRepositorySpy, tokenGeneratorSpy, loadUserByEmailSpy } = makeSut()
+    await sut.auth('valid_email@mail.com', 'valid_password')
+    expect(updateAccessTokenRepositorySpy.userId).toBe(loadUserByEmailSpy.user.id)
+    expect(updateAccessTokenRepositorySpy.token).toBe(tokenGeneratorSpy.accessToken)
+  })
+
   test('Should throw if invalid dependencies are provided', async () => {
     const invalid = {}
     const loadUserByEmailRepository = makeLoadUserByEmailSpy()
@@ -184,7 +209,7 @@ describe('Auth Usecase', () => {
     })
   })
 
-  test('Should throw if dependencies throws', async () => {
+  test('Should throw if any dependencies throws', async () => {
     const loadUserByEmailRepository = makeLoadUserByEmailSpy()
     const encrypter = makeEncrypter()
 
