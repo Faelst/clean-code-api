@@ -1,20 +1,15 @@
 const bcrypt = require('bcrypt')
+const Encrypt = require('./encrypt')
 
 const makeSut = () => {
-  class Encrypter {
-    async compare (value, hash) {
-      return bcrypt.compare(value, hash)
-    }
-  }
-
-  const encrypter = new Encrypter()
+  const encrypt = new Encrypt()
 
   return {
-    sut: encrypter
+    sut: encrypt
   }
 }
 
-describe('Encrypter', () => {
+describe('Encrypt', () => {
   test('Should return if bcrypt returns true', async () => {
     const { sut } = makeSut()
     const isValid = await sut.compare('any_value', 'any_hash')
