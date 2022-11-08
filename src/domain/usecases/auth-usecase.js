@@ -1,7 +1,7 @@
 const { MissingParamsError } = require('../../utils/erros')
 
 class AuthUseCase {
-  constructor (loadUserByEmailRepository, encrypter, tokenGenerator) {
+  constructor ({ loadUserByEmailRepository, encrypter, tokenGenerator }) {
     this.loadUserByEmailRepository = loadUserByEmailRepository
     this.encrypter = encrypter
     this.tokenGenerator = tokenGenerator
@@ -17,7 +17,8 @@ class AuthUseCase {
     }
 
     const user = await this.loadUserByEmailRepository.load(email)
-    const isValid = user && await this.encrypter.compare(password, user.password)
+    const isValid =
+      user && (await this.encrypter.compare(password, user.password))
 
     if (!isValid) {
       return null
