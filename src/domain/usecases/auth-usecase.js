@@ -1,7 +1,14 @@
-const { MissingParamsError } = require('../../utils/erros')
+const {
+  MissingParamError
+} = require('../../utils/erros')
 
 class AuthUseCase {
-  constructor ({ loadUserByEmailRepository, encrypt, tokenGenerator, updateAccessTokenRepository } = {}) {
+  constructor ({
+    loadUserByEmailRepository,
+    encrypt,
+    tokenGenerator,
+    updateAccessTokenRepository
+  } = {}) {
     this.loadUserByEmailRepository = loadUserByEmailRepository
     this.encrypt = encrypt
     this.tokenGenerator = tokenGenerator
@@ -10,11 +17,11 @@ class AuthUseCase {
 
   async auth (email, password) {
     if (!email) {
-      throw new MissingParamsError('email')
+      throw new MissingParamError('email')
     }
 
     if (!password) {
-      throw new MissingParamsError('password')
+      throw new MissingParamError('password')
     }
 
     const user = await this.loadUserByEmailRepository.load(email)

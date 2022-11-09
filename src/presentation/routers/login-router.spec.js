@@ -1,5 +1,10 @@
-const { UnauthorizedError } = require('../errors')
-const { MissingParamsError, InvalidParamError } = require('../../utils/erros')
+const {
+  UnauthorizedError
+} = require('../errors')
+const {
+  MissingParamError,
+  InvalidParamError
+} = require('../../utils/erros')
 const LoginRouter = require('./login-router')
 
 const makeSut = () => {
@@ -47,7 +52,10 @@ const makeEmailValidator = () => {
 
 describe('Login Router', () => {
   test('Should return 200 if valid email and password', async () => {
-    const { sut, authUseCase } = makeSut()
+    const {
+      sut,
+      authUseCase
+    } = makeSut()
 
     const httpRequest = {
       body: {
@@ -62,7 +70,9 @@ describe('Login Router', () => {
   })
 
   test('Should return 400 if no email is provided', async () => {
-    const { sut } = makeSut()
+    const {
+      sut
+    } = makeSut()
 
     const httpRequest = {
       body: {
@@ -72,11 +82,14 @@ describe('Login Router', () => {
 
     const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamsError('email'))
+    expect(httpResponse.body).toEqual(new MissingParamError('email'))
   })
 
   test('Should return 400 if email is invalid', async () => {
-    const { sut, emailValidatorSpy } = makeSut()
+    const {
+      sut,
+      emailValidatorSpy
+    } = makeSut()
 
     emailValidatorSpy.isEmailValid = false
 
@@ -93,7 +106,9 @@ describe('Login Router', () => {
   })
 
   test('Should return 400 if no password is provided', async () => {
-    const { sut } = makeSut()
+    const {
+      sut
+    } = makeSut()
 
     const httpRequest = {
       body: {
@@ -103,24 +118,31 @@ describe('Login Router', () => {
 
     const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamsError('password'))
+    expect(httpResponse.body).toEqual(new MissingParamError('password'))
   })
 
   test('Should return 500 if no httpRequest is provided', async () => {
-    const { sut } = makeSut()
+    const {
+      sut
+    } = makeSut()
     const httpResponse = await sut.route()
     expect(httpResponse.statusCode).toBe(500)
   })
 
   test('Should return 500 if no body is provided', async () => {
-    const { sut } = makeSut()
+    const {
+      sut
+    } = makeSut()
     const httpRequest = {}
     const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
   })
 
   test('Should call AuthUseCase with correct params', async () => {
-    const { sut, authUseCase } = makeSut()
+    const {
+      sut,
+      authUseCase
+    } = makeSut()
 
     const httpRequest = {
       body: {
@@ -135,7 +157,10 @@ describe('Login Router', () => {
   })
 
   test('Should return 401 when invalid credentials are provided', async () => {
-    const { sut, authUseCase } = makeSut()
+    const {
+      sut,
+      authUseCase
+    } = makeSut()
 
     authUseCase.accessToken = null
 
