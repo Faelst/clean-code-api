@@ -4,6 +4,7 @@
   "description": "Construção de API de Autenticação utilizado TDD, junto a base de dados MongoDB",
   "main": "index.js",
   "scripts": {
+    "dev": "node ./src/main/index.js",
     "test": "jest --colors --runInBand",
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
     "test:integration": "npm test -- --watch -c jest-integration-config.js",
@@ -47,6 +48,7 @@
   "dependencies": {
     "bcrypt": "^5.1.0",
     "express": "^4.18.2",
+    "fast-glob": "^3.2.12",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.11.0",
     "validator": "^13.7.0"
